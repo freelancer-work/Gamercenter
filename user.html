@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GameCenter - โปรไฟล์ผู้ใช้</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #2b2d42;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+      color: #2b2d42;
+    }
+    .profile-info {
+      margin-bottom: 30px;
+    }
+    .profile-info p {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+    .game-list {
+      margin-top: 20px;
+    }
+    .game-item {
+      background: #f8f9fa;
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .game-item h3 {
+      margin: 0 0 8px 0;
+      color: #ef233c;
+    }
+    .game-item p {
+      margin: 5px 0;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #ef233c;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background-color: #d90429;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GameCenter</div>
+</header>
+
+<div class="container">
+  <h1>โปรไฟล์ผู้ใช้</h1>
+  
+  <section class="profile-info">
+    <p><strong>ชื่อผู้ใช้:</strong> ผู้ใช้ตัวอย่าง</p>
+    <p><strong>อีเมล:</strong> user@example.com</p>
+    <p><strong>Coin คงเหลือ:</strong> 120</p>
+  </section>
+
+  <section class="game-list">
+    <h2>รายการไอดีเกมที่โพสต์</h2>
+
+    <div class="game-item">
+      <h3>เกม PUBG</h3>
+      <p>รายละเอียด: ไอดีเลเวล 50 มีสกินครบ</p>
+      <p>ราคา: 500 บาท</p>
+    </div>
+
+    <div class="game-item">
+      <h3>เกม Free Fire</h3>
+      <p>รายละเอียด: ไอดีมีเพชร 1000, ตัวละครครบ</p>
+      <p>ราคา: 350 บาท</p>
+    </div>
+
+    <!-- เพิ่มรายการไอดีเกมได้ที่นี่ -->
+  </section>
+
+  <a href="post.html" class="btn">เพิ่มไอดีเกมใหม่</a>
+</div>
+
+</body>
+</html>
