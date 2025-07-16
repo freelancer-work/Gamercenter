@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GameCenter - Feed</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fa;
+      color: #333;
+    }
+    header {
+      background-color: #2b2d42;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: scale(1.01);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #2b2d42;
+    }
+    .price {
+      color: #ef233c;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      color: #aaa;
+      padding: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GameCenter</div>
+  </header>
+
+  <div class="container" id="feed">
+    <!-- รายการไอดีเกมจะโหลดที่นี่ -->
+  </div>
+
+  <footer>
+    &copy; 2025 GameCenter. All rights reserved.
+  </footer>
+
+  <script>
+    async function loadGameAccounts() {
+      const apiUrl = "https://script.google.com/macros/s/AKfycbzM54M3NRRy3YAGBe3a3lqlBCouJPwsD3-wZnjK8RBaOuV-37v-zV0iEcsDcXrlrA-t/exec";
+      const feed = document.getElementById('feed');
+
+      try {
+        const response = await fetch(apiUrl);
+        const result = await response.json();
+
+        if (result.data && Array.isArray(result.data)) {
+          result.data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+              <h3>${item.เกม || 'ไม่ระบุชื่อเกม'}</h3>
+              <p><strong>ผู้ขาย:</strong> ${item.ผู้ขาย || 'ไม่ระบุ'}</p>
+              <p><strong>รายละเอียด:</strong> ${item.รายละเอียด || '-'}</p>
+              <p class="price">ราคา: ${item.ราคา || '-'} บาท</p>
+            `;
+            feed.appendChild(card);
+          });
+        } else {
+          feed.innerHTML = '<p>ไม่พบข้อมูลไอดีเกมในระบบ</p>';
+        }
+      } catch (error) {
+        feed.innerHTML = '<p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
+        console.error(error);
+      }
+    }
+
+    loadGameAccounts();
+  </script>
+</body>
+</html>
