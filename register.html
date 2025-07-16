@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>สมัครสมาชิก</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f2f2f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-box {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007aff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 14px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #005ecb;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-box">
+  <h2>สมัครสมาชิก</h2>
+  <form id="registerForm">
+    <label for="name">ชื่อ</label>
+    <input type="text" id="name" required>
+
+    <label for="phone">เบอร์โทร</label>
+    <input type="tel" id="phone" pattern="[0-9]{10}" required placeholder="เช่น 0891234567">
+
+    <label for="password">รหัสผ่าน</label>
+    <input type="password" id="password" required>
+
+    <button type="submit">สมัครสมาชิก</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!name || !phone || !password) {
+      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+      return;
+    }
+
+    // ตรวจสอบว่าหมายเลขโทรซ้ำไหม
+    let users = JSON.parse(localStorage.getItem("users") || "[]");
+    if (users.find(u => u.phone === phone)) {
+      alert("เบอร์โทรนี้ได้สมัครไว้แล้ว");
+      return;
+    }
+
+    users.push({
+      name,
+      phone,
+      password,
+      status: "ปกติ"
+    });
+
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("สมัครสมาชิกสำเร็จ!");
+    window.location.href = "index.html"; // กลับหน้าหลัก
+  });
+</script>
+
+</body>
+</html>

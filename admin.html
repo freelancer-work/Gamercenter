@@ -1,1 +1,33 @@
 
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header><h1>จัดการสินค้า</h1></header>
+  <main class="admin-panel">
+    <section>
+      <h2>เพิ่มสินค้า</h2>
+      <form id="productForm">
+        <input type="text" placeholder="ชื่อสินค้า" id="pname" required />
+        <input type="text" placeholder="คำอธิบาย" id="pdesc" required />
+        <input type="number" placeholder="ราคา" id="pprice" required />
+        <input type="text" placeholder="URL รูปภาพ" id="pimage" required />
+        <input type="text" placeholder="ลิงก์สินค้า Affiliate" id="plink" required />
+        <input type="text" placeholder="หมวดหมู่" id="pcategory" required />
+        <input type="text" placeholder="แหล่งที่มา" id="psource" />
+        <button type="submit">เพิ่มสินค้า</button>
+      </form>
+    </section>
+    <section>
+      <h2>รายการสินค้า</h2>
+      <div id="admin-product-list" class="grid-container"></div>
+    </section>
+  </main>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

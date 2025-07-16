@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>หน้าโปรเน็ตของลูกค้า</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #eef2f7;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: auto;
+      background: #ffffff;
+      min-height: 100vh;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #007aff;
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .user-info {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .logout-btn {
+      background: #ff3b30;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    h2 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .package {
+      background: #f0f7ff;
+      border-left: 5px solid #007aff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .package-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #007aff;
+    }
+
+    .package-detail {
+      font-size: 14px;
+      margin: 5px 0;
+      color: #333;
+    }
+
+    .package-price {
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .subscribe-btn {
+      background: #28a745;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .subscribe-btn:hover {
+      background: #218838;
+    }
+
+    #alertBox {
+      margin-top: 20px;
+      font-size: 14px;
+      color: green;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="user-info" id="userInfo">กำลังโหลดข้อมูลลูกค้า...</div>
+      <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+    </div>
+
+    <h2>โปรเน็ตที่สามารถสมัครได้</h2>
+    <div id="packages"></div>
+    <div id="alertBox"></div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const packages = JSON.parse(localStorage.getItem('packages') || '[]');
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const userInfo = document.getElementById("userInfo");
+    const packagesDiv = document.getElementById("packages");
+    const alertBox = document.getElementById("alertBox");
+
+    if (!user) {
+      alert("กรุณาเข้าสู่ระบบก่อนใช้งานหน้านี้");
+      window.location.href = "login.html";
+    } else {
+      const statusText = user.status === "active" ? "🟢 สมาชิกปกติ" : "🔴 ถูกระงับการใช้งาน";
+      userInfo.innerHTML = `
+        <strong>คุณ:</strong> ${user.name || user.phone}<br>
+        <strong>เบอร์:</strong> ${user.phone}<br>
+        <strong>สถานะ:</strong> ${statusText}
+      `;
+    }
+
+    function renderPackages() {
+      packagesDiv.innerHTML = '';
+      packages.forEach((pkg, index) => {
+        const div = document.createElement("div");
+        div.className = "package";
+        div.innerHTML = `
+          <div class="package-title">${pkg.name}</div>
+          <div class="package-detail">ราคา: <span class="package-price">${pkg.price} บาท</span></div>
+          <div class="package-detail">${pkg.description || ''}</div>
+          <button class="subscribe-btn" onclick="subscribe(${index})">สมัครโปร</button>
+        `;
+        packagesDiv.appendChild(div);
+      });
+    }
+
+    function subscribe(index) {
+      const selectedPkg = packages[index];
+      const idx = users.findIndex(u => u.phone === user.phone);
+      if (idx !== -1) {
+        users[idx].net = selectedPkg.name;
+        localStorage.setItem('users', JSON.stringify(users));
+        alertBox.textContent = `✅ สมัครโปร "${selectedPkg.name}" เรียบร้อยแล้ว`;
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    }
+
+    renderPackages();
+  </script>
+
+</body>
+</html>

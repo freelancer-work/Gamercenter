@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>โปรเน็ตของฉัน</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f4f7;
+      color: #333;
+    }
+
+    header {
+      background: white;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .user-info {
+      font-size: 16px;
+    }
+
+    .btn-logout {
+      padding: 8px 16px;
+      background-color: #ff3b30;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .network-filters {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      padding: 8px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background-color: #007aff;
+      color: white;
+      border-color: #007aff;
+    }
+
+    .packages {
+      max-width: 900px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .package-card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .package-card h3 {
+      margin: 0 0 10px;
+      color: #007aff;
+    }
+
+    .package-card p {
+      margin: 4px 0;
+    }
+
+    .btn-subscribe {
+      margin-top: 15px;
+      padding: 10px;
+      background: #28a745;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-subscribe:hover {
+      background: #218838;
+    }
+
+    @media (max-width: 600px) {
+      .user-info { font-size: 14px; }
+      .btn-logout { font-size: 13px; padding: 6px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="user-info" id="userInfo">ยินดีต้อนรับ</div>
+    <button class="btn-logout" onclick="logout()">ออกจากระบบ</button>
+  </header>
+
+  <h2>แพ็กเกจโปรเน็ต</h2>
+
+  <div class="network-filters" id="networkFilters">
+    <!-- ปุ่มเลือกเครือข่าย -->
+  </div>
+
+  <div class="packages" id="packageList">
+    <!-- โปรเน็ตแต่ละรายการ -->
+  </div>
+
+  <script>
+    const packageListEl = document.getElementById('packageList');
+    const networkFiltersEl = document.getElementById('networkFilters');
+    const userInfoEl = document.getElementById('userInfo');
+
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const packages = JSON.parse(localStorage.getItem('packages') || '[]');
+
+    if (!user) {
+      alert("กรุณาเข้าสู่ระบบก่อน");
+      window.location.href = 'login.html';
+    }
+
+    userInfoEl.textContent = `👤 ${user.name || 'ไม่ระบุ'} | ☎️ ${user.phone}`;
+
+    let selectedNetwork = 'all';
+
+    function renderNetworkFilters() {
+      const networks = [...new Set(packages.map(p => p.network || 'อื่นๆ'))];
+      networkFiltersEl.innerHTML = '<button class="filter-btn active" onclick="filterNetwork(\'all\', this)">ทั้งหมด</button>';
+      networks.forEach(net => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.textContent = net;
+        btn.onclick = () => filterNetwork(net, btn);
+        networkFiltersEl.appendChild(btn);
+      });
+    }
+
+    function filterNetwork(network, btn) {
+      selectedNetwork = network;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPackages();
+    }
+
+    function renderPackages() {
+      packageListEl.innerHTML = '';
+      const filtered = selectedNetwork === 'all' ? packages : packages.filter(p => p.network === selectedNetwork);
+      if (filtered.length === 0) {
+        packageListEl.innerHTML = '<p style="text-align:center;width:100%;">ไม่พบโปรเน็ตในเครือข่ายนี้</p>';
+        return;
+      }
+
+      filtered.forEach(pkg => {
+        const card = document.createElement('div');
+        card.className = 'package-card';
+        card.innerHTML = `
+          <h3>${pkg.name}</h3>
+          <p><strong>เครือข่าย:</strong> ${pkg.network}</p>
+          <p><strong>ราคา:</strong> ${pkg.price} บาท</p>
+          <p><strong>รายละเอียด:</strong> ${pkg.description}</p>
+          <button class="btn-subscribe" onclick="subscribe('${pkg.name}')">สมัครเน็ต</button>
+        `;
+        packageListEl.appendChild(card);
+      });
+    }
+
+    function subscribe(pkgName) {
+      alert(`คุณได้สมัครแพ็กเกจ: ${pkgName}`);
+      // ตรงนี้สามารถเพิ่มฟังก์ชันส่งข้อมูลการสมัครไปบันทึกในระบบได้
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    }
+
+    renderNetworkFilters();
+    renderPackages();
+  </script>
+</body>
+</html>
+
+
+---
+
+✅ copyring by Bodin 1995
